@@ -1,0 +1,12 @@
+.App {
+  text-align: center;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  color: #ffffff;
+  min-height: 100vh;
+  justify-content: space-between;
+}

@@ -1,0 +1,37 @@
+@import url("./fonts/fonts.css");
+
+body, p, h1, h2, h3{
+  margin: 0;
+    font-family: "Inter",
+    Arial,
+    sans-serif;
+}
+
+.root {
+  margin: 0;
+}
+
+.root__content {
+  max-width: 1168px;
+  width: calc(100% - 140px);
+  margin: 0 auto;
+}
+
+.root__section {
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 780px) {
+  .root__content {
+    width: calc(100% - 100px);
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 590px) {
+  .root__content {
+    width: calc(100% - 36px);
+    margin: 0 auto;
+  }
+}

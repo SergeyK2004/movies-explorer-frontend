@@ -1,0 +1,102 @@
+.cardList{
+    list-style-type: none;
+    color: #000000;
+    padding: 0;
+}
+.card{
+    background-color: #F9F9F9;
+    display: flex;
+    flex-direction: row;
+    padding: 6px 6px 6px 22px;
+    justify-content: space-between;
+    align-items: center;
+    align-content: stretch;
+    box-sizing:border-box;
+    height: 134px;
+    margin-top: 40px;
+}
+.card__info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items:flex-start;
+    height: 100%;
+}
+.card__title{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.card__duration{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 13px;
+
+    color: #A0A0A0;
+}
+.card__like{
+    width: 14px;
+    height: 12px;
+    background-image: url('../../../images/like.svg');
+    border: none;
+    background-color: unset;
+    cursor: pointer;
+    }
+
+.card__like_activ{
+    width: 14px;
+    height: 12px;
+    background-image: url('../../../images/like_active.svg');
+    border: none;
+    background-color: unset;
+    cursor: pointer;
+}
+.card__like_saved {
+  width: 14px;
+  height: 12px;
+  background-image: url('../../../images/like_saved.svg');
+  border: none;
+  background-color: unset;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 590px) {
+.card {
+    flex-direction: column-reverse;
+    height: fit-content;
+    padding: 0;
+    align-items: initial;
+}
+.card__img {
+    max-height: 168px;
+        width: 100%;
+        object-fit: contain;
+}
+.card__title {
+
+width: 90%;
+    order: 1;
+        text-align: start;
+}
+.card__duration {
+    margin-top: 8px;
+    width: 100%;
+    order: 3;
+        text-align: start;
+}
+.card__info {
+    flex-flow: row wrap;
+    justify-content: space-between;
+    margin-left: 12px;
+    margin-right: 16px;
+    align-items: flex-start;
+        margin-top: 14px;
+}
+.card__like, .card__like_saved {
+
+    order: 2;
+}
+}

@@ -1,0 +1,165 @@
+.about {
+  padding-top: 110px;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.about__title {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 22px;
+  line-height: 27px;
+  letter-spacing: -0.04em;
+  width: 100%;
+  border-bottom: #000000 1px solid;
+  text-align: left;
+  padding-bottom: 23px;
+}
+
+.about__diploma {
+  margin-top: 70px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+}
+
+.about__stages {
+  width: 50%;
+}
+
+.about__time {
+  width: 50%;
+}
+
+.about__chapter-title {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+  text-align: left;
+  padding-right: 5%;
+}
+
+.about__chapter-text {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 26px;
+  text-align: left;
+  box-sizing: border-box;
+  padding-right: 5%;
+}
+
+.about__bar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 110px;
+  margin-bottom: 100px;
+}
+
+.about__1week {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 36px;
+  text-align: center;
+
+  color: #000000;
+  width: 20%;
+  background: #2BE080;
+}
+
+.about__4weeks {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 36px;
+  text-align: center;
+
+  color: #000000;
+  width: 80%;
+  background: #F2F2F2;
+}
+
+.about__1week-label {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 36px;
+  text-align: center;
+  color: #A0A0A0;
+  width: 20%;
+  background: #ffffff;
+}
+
+.about__4weeks-label {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 36px;
+
+  text-align: center;
+
+  color: #A0A0A0;
+  width: 80%;
+  background: #ffffff;
+}
+
+@media screen and (max-width: 590px) {
+
+  .about__diploma {
+    flex-direction: column;
+  }
+
+  .about__stages {
+    width: 100%;
+  }
+
+  .about__time {
+    width: 100%;
+    margin-top: 56px;
+  }
+
+  .about__chapter-text {
+    padding-right: 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 16px;
+    color: #000000;
+  }
+
+  .about__title {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.04em;
+    color: #000000;
+  }
+
+  .about__chapter-title {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: -0.04em;
+    color: #000000;
+    padding-right: 0;
+  }
+
+  .about__1week,
+  .about__4weeks,
+  .about__1week-label,
+  .about__4weeks-label {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    text-align: center;
+  }
+
+}
