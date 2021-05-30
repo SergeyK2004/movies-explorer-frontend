@@ -11,16 +11,25 @@ function MoviesCardList({ saved }) {
       <ul className="root__content cardList">
         <li className="card">
           <div className="card__info">
-            <p className="card__title">33 слова о дизайне</p>
-            <p className="card__duration">1ч 42м</p>
-            <button className={cardLikeButtonClassName} type="button"></button>
+            <div className="card__about">
+              <p className="card__title">33 слова о дизайне</p>
+              <p className="card__duration">1ч 42м</p>
+            </div>
+            <div>
+              <button
+                className={cardLikeButtonClassName}
+                type="button"
+              ></button>
+            </div>
           </div>
           <img className="card__img" alt="Постер" src={poster}></img>
         </li>
         <li className="card">
           <div className="card__info">
-            <p className="card__title">Киноальманах «100 лет дизайна»</p>
-            <p className="card__duration">1ч 42м</p>
+            <div className="card__about">
+              <p className="card__title">Киноальманах «100 лет дизайна»</p>
+              <p className="card__duration">1ч 42м</p>
+            </div>
             <button className={cardLikeButtonClassName} type="button"></button>
           </div>
           <img className="card__img" alt="Постер" src={poster1}></img>
