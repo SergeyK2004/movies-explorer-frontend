@@ -5,7 +5,8 @@ import MainMenu from '../MainMenu/MainMenu';
 import Wrapper from '../Wrapper/Wrapper';
 import './Header.css';
 
-function Header() {
+function Header(props) {
+  const { isPromo = false } = props;
   const [isOpen, setIsOpen] = useState(false);
   function handleClose() {
     setIsOpen(false);
@@ -13,19 +14,17 @@ function Header() {
   function handleOpen() {
     setIsOpen(true);
   }
-
+  const buttonClass = isPromo
+    ? 'header__menu-button_white'
+    : 'header__menu-button';
   return (
     <>
       <header className="header root__content">
         <Link to="/">
           <img src={logo} alt="Logo" className="header__logo"></img>
         </Link>
-        <MainMenu isWrapper={false} />
-        <button
-          type="button"
-          onClick={handleOpen}
-          className="header__menu-button"
-        />
+        <MainMenu isWrapper={false} isPromo={isPromo} />
+        <button type="button" onClick={handleOpen} className={buttonClass} />
       </header>
       {isOpen && <Wrapper handleClose={handleClose} />}
     </>

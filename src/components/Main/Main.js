@@ -10,7 +10,7 @@ import './Main.css';
 function Main() {
   return (
     <div class="main">
-      <Promo />
+      <Promo isAuth />
       <AboutProject />
       <Techs />
       <Portfolio />
