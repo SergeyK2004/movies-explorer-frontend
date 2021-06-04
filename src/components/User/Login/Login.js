@@ -4,6 +4,7 @@ import AuthForm from '../AuthForm/AuthForm';
 
 function Login(props) {
   function handleSubmit(password, email) {
+    console.log(password, email);
     props.onLogin(password, email);
   }
 

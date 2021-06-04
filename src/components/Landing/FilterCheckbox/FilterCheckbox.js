@@ -14,7 +14,7 @@ function FilterCheckbox({ placeholder, handleChange, value }) {
         required
       ></input>
 
-      <label className="checkbox__btn" for="check"></label>
+      <label className="checkbox__btn" htmlFor="check"></label>
       <p className="checkbox__name">{placeholder}</p>
     </div>
   );

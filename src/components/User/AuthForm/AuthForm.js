@@ -9,7 +9,7 @@ function AuthForm(props) {
   const [password, setPassword] = React.useState('');
   function handleSubmit(e) {
     e.preventDefault();
-    props.onSubmit(name, password, email);
+    props.onSubmit(password, email, name);
   }
   function handlerOnChangeName(evt) {
     setName(evt.target.value);

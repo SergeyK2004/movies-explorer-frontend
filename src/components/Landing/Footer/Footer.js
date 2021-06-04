@@ -3,14 +3,16 @@ import './Footer.css';
 
 function Footer() {
   return (
-    <section class="footer  root__content">
-      <p class="footer__title">Учебный проект Яндекс.Практикум х BeatFilm.</p>
-      <div class="footer__end">
-        <p class="footer__copyright">© 2021</p>
-        <div class="footer__links">
+    <section className="footer  root__content">
+      <p className="footer__title">
+        Учебный проект Яндекс.Практикум х BeatFilm.
+      </p>
+      <div className="footer__end">
+        <p className="footer__copyright">© 2021</p>
+        <div className="footer__links">
           <a
             rel="noreferrer"
-            class="footer__link"
+            className="footer__link"
             target="_blank"
             href="https://praktikum.yandex.ru"
           >
@@ -18,7 +20,7 @@ function Footer() {
           </a>
           <a
             rel="noreferrer"
-            class="footer__link"
+            className="footer__link"
             target="_blank"
             href="https://github.com"
           >
@@ -26,7 +28,7 @@ function Footer() {
           </a>
           <a
             rel="noreferrer"
-            class="footer__link"
+            className="footer__link"
             target="_blank"
             href="https://ru-ru.facebook.com/"
           >

@@ -1,11 +1,13 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Header from '../../Landing/Header/Header';
+import CurrentUserContext from '../../../utils/CurrentUserContext';
 import './Profile.css';
 
 function Profile(props) {
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const currentUser = React.useContext(CurrentUserContext);
+  const [name, setName] = React.useState(currentUser.name);
+  const [email, setEmail] = React.useState(currentUser.email);
   const [password, setPassword] = React.useState('');
   function handleSubmit(e) {
     e.preventDefault();
@@ -79,7 +81,9 @@ function Profile(props) {
           <p onClick={handleSubmit} className="profile__change">
             Редактировать
           </p>
-          <p className="profile__logout">Выйти из аккаунта</p>
+          <p onClick={props.onLogout} className="profile__logout">
+            Выйти из аккаунта
+          </p>
         </div>
       </section>
     </>
