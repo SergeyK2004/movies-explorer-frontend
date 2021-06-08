@@ -9,9 +9,10 @@ function Profile(props) {
   const [name, setName] = React.useState(currentUser.name);
   const [email, setEmail] = React.useState(currentUser.email);
   const [password, setPassword] = React.useState('');
+
   function handleSubmit(e) {
     e.preventDefault();
-    props.onSubmit(name, password, email);
+    props.onSubmit({ name, password, email });
   }
   function handlerOnChangeName(evt) {
     setName(evt.target.value);
@@ -32,7 +33,7 @@ function Profile(props) {
       <Header />
       <section className="profile">
         <div className="profile__top">
-          <h2 className="profile__title">{`Привет, ${name}`}</h2>
+          <h2 className="profile__title">{`Привет, ${currentUser.name}`}</h2>
         </div>
         <form name="login" className="profile__form" noValidate>
           <label className="profile__field">

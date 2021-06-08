@@ -10,6 +10,7 @@ import Profile from '../User/Profile/Profile';
 import Error404 from '../Landing/404/Error404';
 import CurrentUserContext from '../../utils/CurrentUserContext';
 import { chekToken, autorize, register } from '../../utils/auth';
+import mainApi from '../../utils/mainApi';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -33,8 +34,19 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-    console.log(name, password, email);
   }
+
+  function handleUpdateUser(item) {
+    mainApi
+      .setUserInfo(item)
+      .then((newUserInfo) => {
+        setCurrentUser(newUserInfo.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function onLogin(password, email) {
     autorize(password, email)
       .then((res) => {
@@ -54,14 +66,15 @@ function App() {
         console.log(err);
       });
   }
+
   function onLogout() {
     localStorage.removeItem('token');
     history.push('/');
     setLoggedIn(false);
   }
-  function handleFormSubmit(evt) {
-    console.log(evt);
-  }
+
+  function handleFormSubmit() {}
+
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
@@ -100,8 +113,8 @@ function App() {
             </Route>
             <Route path="/profile">
               <Profile
-                handleFormSubmit={handleFormSubmit}
                 onLogout={onLogout}
+                onSubmit={handleUpdateUser}
               ></Profile>
             </Route>
             <Route path="/">

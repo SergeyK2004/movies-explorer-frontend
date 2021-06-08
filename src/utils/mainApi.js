@@ -20,8 +20,16 @@ class MainApi {
   }
 
   setUserInfo(item) {
+    let token = '';
+    if (localStorage.getItem('token')) {
+      token = localStorage.getItem('token');
+    }
     return fetch(this._baseUrl + 'users/me', {
-      headers: this._headers,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
       method: 'PATCH',
       body: JSON.stringify({
         name: item.name,
@@ -31,6 +39,7 @@ class MainApi {
       return this._getResponseData(res);
     });
   }
+
   getMovies() {
     return fetch(this._baseUrl + 'movies', {
       headers: this._headers,
@@ -72,12 +81,6 @@ class MainApi {
 
 const mainApi = new MainApi({
   baseUrl: 'https://sergey.nomoredomains.icu/',
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
-
-// authorization:
-//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGI1MzllYjhjMWNjZTU0NzU3MTExYmYiLCJpYXQiOjE2MjI0ODk2MzQsImV4cCI6MTYyMzA5NDQzNH0.I4RpNB_cs7hmSzfSBL1Tw6P50oF1VsZdiiobaFHTn5Y',
 
 export default mainApi;

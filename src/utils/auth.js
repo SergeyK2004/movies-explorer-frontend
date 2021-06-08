@@ -20,7 +20,7 @@ export const register = (name, password, email) => {
   });
 };
 export const autorize = (password, email) => {
-  return fetch('https://sergey.nomoredomains.icu/signin', {
+  return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
