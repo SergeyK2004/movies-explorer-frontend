@@ -2,31 +2,36 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './AuthForm.css';
 import logo from '../../../images/logo.svg';
+import useInput from '../../../utils/useInput';
 
 function AuthForm(props) {
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const name = useInput('', 'name');
+  const email = useInput('', 'email');
+  const password = useInput('', 'text');
+
+  const [buttonClass, setButtonClass] = React.useState('');
+  const [submitDisabled, setSubmitDisabled] = React.useState('');
+
   function handleSubmit(e) {
     e.preventDefault();
-    props.onSubmit(password, email, name);
+    props.onSubmit({
+      password: password.value,
+      email: email.value,
+      name: name.value,
+    });
   }
-  function handlerOnChangeName(evt) {
-    setName(evt.target.value);
-  }
-  function handlerOnChangeEmail(evt) {
-    setEmail(evt.target.value);
-  }
-  function handlerOnChangePassword(evt) {
-    setPassword(evt.target.value);
-  }
+
   React.useEffect(() => {
-    if (props.isClearInput) {
-      setName('');
-      setEmail('');
-      setPassword('');
+    if (name.error || email.error || password.error) {
+      setButtonClass(
+        'authForm__button-submit authForm__button-submit_disabled',
+      );
+      setSubmitDisabled(true);
+    } else {
+      setButtonClass('authForm__button-submit');
+      setSubmitDisabled(false);
     }
-  }, [props.isClearInput]);
+  }, [name.error, email.error, password.error]);
 
   const underButtonText = props.needUnderButton ? props.children : '';
 
@@ -43,44 +48,55 @@ function AuthForm(props) {
           <label className="authForm__field">
             <p className="authForm__field-name">Имя</p>
             <input
+              {...name}
+              pattern="[a-zа-яёA-ZА-ЯЁ][a-zа-яёA-ZА-ЯЁ -]+"
+              minLength="2"
+              maxLength="40"
               required
+              autoComplete="username"
               placeholder="Name"
               className="authForm__input authForm__input_type_name"
               type="text"
-              name="name"
-              id="name-input"
-              autoComplete="username"
-              minLength="2"
-              maxLength="40"
-              value={name || ''}
-              onChange={handlerOnChangeName}
             />
             <span
-              className="authForm__input-error"
+              className={
+                name.error
+                  ? 'authForm__input-error'
+                  : 'authForm__input-error authForm__input-noerror'
+              }
               id="name-input-error"
-            ></span>
+            >
+              {name.error}
+            </span>
           </label>
         )}
         <label className="authForm__field">
           <p className="authForm__field-name">E-mail</p>
           <input
+            {...email}
             required
             placeholder="Email"
             className="authForm__input authForm__input_type_email"
-            type="text"
+            type="email"
             name="email"
             id="email-input"
-            autoComplete="username"
-            minLength="2"
-            maxLength="40"
-            value={email || ''}
-            onChange={handlerOnChangeEmail}
+            autoComplete="useremail"
           />
-          <span className="authForm__input-error" id="name-input-error"></span>
+          <span
+            className={
+              email.error
+                ? 'authForm__input-error'
+                : 'authForm__input-error authForm__input-noerror'
+            }
+            id="name-input-error"
+          >
+            {email.error}
+          </span>
         </label>
         <label className="authForm__field">
           <p className="authForm__field-name">Пароль</p>
           <input
+            {...password}
             required
             placeholder="Пароль"
             className="authForm__input authForm__input_type_password"
@@ -88,23 +104,28 @@ function AuthForm(props) {
             name="password"
             id="password-input"
             autoComplete="current-password"
-            minLength="2"
+            minLength="8"
             maxLength="40"
-            value={password || ''}
-            onChange={handlerOnChangePassword}
           />
           <span
-            className="authForm__input-error"
-            id="password-input-error"
-          ></span>
+            className={
+              password.error
+                ? 'authForm__input-error'
+                : 'authForm__input-error authForm__input-noerror'
+            }
+            id="name-input-error"
+          >
+            {password.error}
+          </span>
         </label>
       </form>
       <div className="authForm__bottom">
         {props.button && (
           <button
-            className="authForm__button-submit"
+            className={buttonClass}
             type="submit"
             onClick={handleSubmit}
+            disabled={submitDisabled}
           >
             {props.button}
           </button>

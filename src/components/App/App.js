@@ -30,7 +30,7 @@ function App() {
   const [usersCheckboxValue, setUsersCheckboxValue] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  function onRegister(password, email, name) {
+  function onRegister({ password, email, name }) {
     register(name, password, email)
       .then((res) => {
         setIsClearInput(true);
@@ -59,7 +59,7 @@ function App() {
       });
   }
 
-  function onLogin(password, email) {
+  function onLogin({ password, email }) {
     autorize(password, email)
       .then((res) => {
         setIsClearInput(true);
@@ -78,12 +78,6 @@ function App() {
         console.log(err);
       });
   }
-  // React.useEffect(() => {
-  //   if (loggedIn) {
-  //     // Если пользователь залогинился, то забираем данные с серверов и сохраняем в хранилище
-  //     getData();
-  //   }
-  // });
 
   function getData() {
     setIsUploadData(true);
