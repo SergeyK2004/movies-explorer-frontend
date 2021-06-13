@@ -6,7 +6,6 @@ class MainApi {
 
   _getResponseData(res) {
     if (!res.ok) {
-      console.log('не прошло');
       return Promise.reject(`Ошибка: ${res.status}`);
     }
     return res.json();

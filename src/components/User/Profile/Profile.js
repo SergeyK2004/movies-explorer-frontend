@@ -34,7 +34,6 @@ function Profile(props) {
     } else {
       newEmail = email.value;
     }
-    console.log(newName);
     if (
       name.error ||
       email.error ||

@@ -3,8 +3,8 @@ import { Link, withRouter } from 'react-router-dom';
 import AuthForm from '../AuthForm/AuthForm';
 
 function Register(props) {
-  function handleSubmit(password, email, name) {
-    props.onRegister(password, email, name);
+  function handleSubmit({ password, email, name }) {
+    props.onRegister({ password, email, name });
   }
 
   return (

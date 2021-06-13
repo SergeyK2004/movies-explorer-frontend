@@ -35,7 +35,7 @@ function App() {
   const [modalText, setModalText] = React.useState('');
 
   function onRegister({ password, email, name }) {
-    register(name, password, email)
+    register({ name, password, email })
       .then((res) => {
         setIsClearInput(true);
         setLoggedIn(true);
@@ -68,7 +68,7 @@ function App() {
   }
 
   function onLogin({ password, email }) {
-    autorize(password, email)
+    autorize({ password, email })
       .then((res) => {
         setIsClearInput(true);
         localStorage.setItem('token', res.data);
@@ -184,7 +184,6 @@ function App() {
     } else {
       getData()
         .then(([movies, usersMovies]) => {
-          console.log(activPage);
           if (activPage === 'video') {
             movArr = movies.filter(function (item) {
               return item.nameRU.indexOf(searchValue) > -1 && item.image;
@@ -194,7 +193,6 @@ function App() {
               return item.nameRU.indexOf(searchValue) > -1 && item.image;
             });
           }
-          console.log(searchValue, movArr, activPage);
           setMeaning({ searchValue, movArr, whatsPage: activPage });
           setHasError(false);
         })
