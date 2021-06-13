@@ -6,11 +6,23 @@ class MainApi {
 
   _getResponseData(res) {
     if (!res.ok) {
+      console.log('не прошло');
       return Promise.reject(`Ошибка: ${res.status}`);
     }
+    console.log('прошло');
     return res.json();
   }
-
+  _createHeader() {
+    let token = '';
+    if (localStorage.getItem('token')) {
+      token = localStorage.getItem('token');
+    }
+    return {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
   getUserInfo() {
     return fetch(this._baseUrl + 'users/me', {
       headers: this._headers,
@@ -20,16 +32,8 @@ class MainApi {
   }
 
   setUserInfo(item) {
-    let token = '';
-    if (localStorage.getItem('token')) {
-      token = localStorage.getItem('token');
-    }
     return fetch(this._baseUrl + 'users/me', {
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers: this._createHeader(),
       method: 'PATCH',
       body: JSON.stringify({
         name: item.name,
@@ -42,22 +46,37 @@ class MainApi {
 
   getMovies() {
     return fetch(this._baseUrl + 'movies', {
-      headers: this._headers,
+      headers: this._createHeader(),
     }).then((res) => {
       return this._getResponseData(res);
     });
   }
-  delMovie(cardObject) {
-    return fetch(this._baseUrl + 'movies/' + cardObject._id, {
-      headers: this._headers,
+  delMovie(cardId) {
+    return fetch(this._baseUrl + 'movies/' + cardId, {
+      headers: this._createHeader(),
       method: 'DELETE',
     }).then((res) => {
       return this._getResponseData(res);
     });
   }
   setNewMovie(item) {
+    const aaa = {
+      country: item.country,
+      director: item.director,
+      duration: item.duration,
+      year: item.year,
+      description: item.description,
+      image: 'https://api.nomoreparties.co' + item.image.url,
+      trailer: item.trailerLink,
+      nameRU: item.nameRU,
+      nameEN: item.nameEN,
+      thumbnail:
+        'https://api.nomoreparties.co' + item.image.formats.thumbnail.url,
+      movieId: item.id,
+    };
+    console.log(aaa);
     return fetch(this._baseUrl + 'movies', {
-      headers: this._headers,
+      headers: this._createHeader(),
       method: 'POST',
       body: JSON.stringify({
         country: item.country,
@@ -65,13 +84,13 @@ class MainApi {
         duration: item.duration,
         year: item.year,
         description: item.description,
-        image: item.image,
-        trailer: item.trailer,
+        image: 'https://api.nomoreparties.co' + item.image.url,
+        trailer: item.trailerLink,
         nameRU: item.nameRU,
         nameEN: item.nameEN,
-        thumbnail: item.thumbnail,
-        movieId: item.movieId,
-        owner: item.owner,
+        thumbnail:
+          'https://api.nomoreparties.co' + item.image.formats.thumbnail.url,
+        movieId: item.id,
       }),
     }).then((res) => {
       return this._getResponseData(res);

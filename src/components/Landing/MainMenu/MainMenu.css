@@ -30,10 +30,10 @@
   color: #ffffff;
 }
 
-.main-menu__link-active {
-  font-weight: 500;
-  font-size: 16px;
-
+.main-menu__link-active:after {
+  border: #000000 solid 1px;
+  content: '';
+  display: block;
 }
 
 .main-menu__profile {
@@ -80,5 +80,9 @@
 
   .main-menu__link {
     margin-bottom: 28px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
   }
 }

@@ -11,12 +11,24 @@ import Error404 from '../Landing/404/Error404';
 import CurrentUserContext from '../../utils/CurrentUserContext';
 import { chekToken, autorize, register } from '../../utils/auth';
 import mainApi from '../../utils/mainApi';
+import moviesApi from '../../utils/moviesApi';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [isClearInput, setIsClearInput] = React.useState(false);
   const history = useHistory();
+  const [moviesArray, setMoviesArray] = useState([]); // массив с фильмами с сервера
+  const [usersMoviesArray, setUsersMoviesArray] = useState([]); // массив с фильмами пользователей
+  const [isUploadData, setIsUploadData] = useState(false); // идет обмен данными с серверами
+  const [activPage, setActivPage] = useState('video'); // Определяем страницу с фильмами, из базы или пользовательские
+  const [showMoviesArray, setShowMoviesArray] = useState([]);
+  const [usersShowMoviesArray, setUsersShowMoviesArray] = useState([]);
+  const [searchString, setSearchString] = useState('');
+  const [checkboxValue, setCheckboxValue] = useState(false);
+  const [usersSearchString, setUsersSearchString] = useState('');
+  const [usersCheckboxValue, setUsersCheckboxValue] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   function onRegister(password, email, name) {
     register(name, password, email)
@@ -66,14 +78,130 @@ function App() {
         console.log(err);
       });
   }
+  // React.useEffect(() => {
+  //   if (loggedIn) {
+  //     // Если пользователь залогинился, то забираем данные с серверов и сохраняем в хранилище
+  //     getData();
+  //   }
+  // });
+
+  function getData() {
+    setIsUploadData(true);
+    return Promise.all([moviesApi.getMovies(), mainApi.getMovies()])
+      .then(([movies, usersMovies]) => {
+        console.log('ddd');
+        setUsersMoviesArray(usersMovies.data);
+        movies.forEach((element) => {
+          element.like = usersMovies.data.some((item) => {
+            return item.movieId === element.id;
+          });
+        });
+        setMoviesArray(movies);
+        localStorage.setItem('moviesArray', JSON.stringify(movies));
+        localStorage.setItem(
+          'usersMoviesArray',
+          JSON.stringify(usersMovies.data),
+        );
+        setIsUploadData(true);
+        return [movies, usersMovies];
+      })
+      .catch((err) => {
+        setIsUploadData(false);
+        return Promise.reject(`Ошибка: ${err}`);
+      })
+      .finally(() => setIsUploadData(false));
+  }
 
   function onLogout() {
-    localStorage.removeItem('token');
+    localStorage.clear();
     history.push('/');
     setLoggedIn(false);
+    setCurrentUser({});
   }
 
   function handleFormSubmit() {}
+
+  function setMeaning({ searchValue, movArr }) {
+    if (activPage === 'video') {
+      setSearchString(searchValue);
+      setShowMoviesArray(movArr);
+      localStorage.setItem('searchStringStorage', searchValue);
+      localStorage.setItem('showMoviesArray', JSON.stringify(movArr));
+    } else {
+      setUsersSearchString(searchValue);
+      setUsersShowMoviesArray(movArr);
+      localStorage.setItem('searchUsersStringStorage', searchValue);
+      localStorage.setItem('usersShowMoviesArray', JSON.stringify(movArr));
+    }
+  }
+
+  function handleSearchFormSubmit(searchValue) {
+    let movArr = [];
+    if (
+      localStorage.getItem(
+        activPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
+      )
+    ) {
+      const arrayForShow = JSON.parse(
+        localStorage.getItem(
+          activPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
+        ),
+      );
+      movArr = arrayForShow.filter(function (item) {
+        return item.nameRU.indexOf(searchValue) > -1 && item.image;
+      });
+      setMeaning({ searchValue, movArr });
+    } else {
+      getData()
+        .then(([movies, usersMovies]) => {
+          if (activPage === 'video') {
+            movArr = movies.filter(function (item) {
+              return item.nameRU.indexOf(searchValue) > -1 && item.image;
+            });
+          } else {
+            movArr = usersMovies.filter(function (item) {
+              return item.nameRU.indexOf(searchValue) > -1 && item.image;
+            });
+          }
+          setMeaning({ searchValue, movArr });
+          setHasError(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setHasError(true);
+        });
+    }
+  }
+  function changeCheckbox(value) {
+    if (activPage === 'video') {
+      setCheckboxValue(value);
+      localStorage.setItem('checkboxValueStorage', value);
+    } else {
+      setUsersCheckboxValue(value);
+      localStorage.setItem('usersCheckboxValueStorage', value);
+    }
+  }
+  function handleLikeClick({ card, saved }) {
+    if (!saved && !card.like) {
+      // Добавляем фильм в базу пользователя
+      return mainApi
+        .setNewMovie(card)
+        .then((res) => {
+          usersMoviesArray.push(res.data);
+          localStorage.setItem(
+            'usersMoviesArray',
+            JSON.stringify(usersMoviesArray),
+          );
+          console.log(usersMoviesArray);
+          card.like = true;
+          moviesArray.find(function (item) {
+            return item.id === card.id;
+          }).like = true;
+          localStorage.setItem('moviesArray', JSON.stringify(moviesArray));
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -81,11 +209,42 @@ function App() {
       // здесь будем проверять токен
       chekToken(token)
         .then((res) => {
+          setActivPage('video');
           setLoggedIn(true);
           setCurrentUser(res.data);
+          if (localStorage.getItem('searchStringStorage')) {
+            setSearchString(localStorage.getItem('searchStringStorage'));
+          }
+          if (localStorage.getItem('showMoviesArray')) {
+            setShowMoviesArray(
+              JSON.parse(localStorage.getItem('showMoviesArray')),
+            );
+          }
+          if (localStorage.getItem('checkboxValueStorage')) {
+            setCheckboxValue(
+              localStorage.getItem('checkboxValueStorage') === 'true',
+            );
+          }
+          if (localStorage.getItem('searchUsersStringStorage')) {
+            setUsersSearchString(
+              localStorage.getItem('searchUsersStringStorage'),
+            );
+          }
+          if (localStorage.getItem('usersShowMoviesArray')) {
+            setUsersShowMoviesArray(
+              JSON.parse(localStorage.getItem('usersShowMoviesArray')),
+            );
+          }
+          if (localStorage.getItem('checkboxUsersValueStorage')) {
+            setUsersCheckboxValue(
+              localStorage.getItem('checkboxUsersValueStorage') === 'true',
+            );
+          }
+          setActivPage('video');
           history.push('/movies');
         })
         .catch((err) => {
+          localStorage.clear();
           console.log(err);
         });
     }
@@ -106,10 +265,30 @@ function App() {
               <Login onLogin={onLogin} isClearInput={isClearInput} />
             </Route>
             <Route path="/movies">
-              <Movies handleFormSubmit={handleFormSubmit}></Movies>
+              <Movies
+                handleSearchFormSubmit={handleSearchFormSubmit}
+                changeCheckbox={changeCheckbox}
+                searchString={searchString}
+                checkboxValue={checkboxValue}
+                isUploadData={isUploadData}
+                showMoviesArray={showMoviesArray}
+                hasError={hasError}
+                setActivPage={setActivPage}
+                handleLikeClick={handleLikeClick}
+              />
             </Route>
             <Route path="/saved-movies">
-              <SavedMovies handleFormSubmit={handleFormSubmit}></SavedMovies>
+              <SavedMovies
+                handleSearchFormSubmit={handleSearchFormSubmit}
+                changeCheckbox={changeCheckbox}
+                searchString={usersSearchString}
+                checkboxValue={usersCheckboxValue}
+                isUploadData={isUploadData}
+                showMoviesArray={usersShowMoviesArray}
+                hasError={hasError}
+                setActivPage={setActivPage}
+                handleLikeClick={handleLikeClick}
+              ></SavedMovies>
             </Route>
             <Route path="/profile">
               <Profile

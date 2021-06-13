@@ -10,7 +10,7 @@ function FilterCheckbox({ placeholder, handleChange, value }) {
         id="check"
         placeholder={placeholder}
         onChange={handleChange}
-        value={value}
+        checked={value}
         required
       ></input>
 

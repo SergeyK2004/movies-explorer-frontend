@@ -3,24 +3,39 @@ import search from '../../../images/search.png';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import './SearchForm.css';
 
-function SearchForm({ handleFormSubmit }) {
-  const [value, setValue] = useState('');
-  const [checkbox, setCheckbox] = useState('');
+function SearchForm({
+  handleFormSubmit,
+  changeCheckbox,
+  searchString,
+  checkboxValue,
+  pageForSearch,
+}) {
+  const [searchEmpty, setSearchEmpty] = useState(false);
+
+  const [value, setValue] = useState(searchString);
+  const searchErrorClass = searchEmpty
+    ? 'searchForm__error searchForm__error_visible'
+    : 'searchForm__error';
 
   const handleChange = (evt) => {
+    setSearchEmpty(false);
     setValue(evt.target.value);
   };
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+    if (!value) {
+      setSearchEmpty(true);
+      return;
+    }
     handleFormSubmit(value);
   };
   const checkboxChange = (evt) => {
-    setCheckbox(evt.target.value);
+    changeCheckbox(evt.target.checked);
   };
   return (
     <section className="searchForm root__content">
-      <form className="searchForm__form" onSubmit={handleSubmit}>
+      <form className="searchForm__form" noValidate onSubmit={handleSubmit}>
         <div className="searchForm__title">
           <input
             className="searchForm__input"
@@ -38,11 +53,12 @@ function SearchForm({ handleFormSubmit }) {
             ></img>
           </button>
         </div>
+        <span className={searchErrorClass}>Нужно ввести ключевое слово</span>
 
         <FilterCheckbox
           placeholder={'Короткометражки'}
           handleChange={checkboxChange}
-          value={checkbox}
+          value={checkboxValue}
         />
       </form>
     </section>

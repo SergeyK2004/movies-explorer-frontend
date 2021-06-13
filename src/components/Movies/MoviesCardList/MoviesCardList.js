@@ -1,40 +1,67 @@
 import React from 'react';
-import poster from '../../../images/poster.png';
-import poster1 from '../../../images/poster1.png';
+import EmptyResult from '../EmptyResult/EmptyResult';
+import MoviesCard from '../MoviesCard/MoviesCard';
+import Preloader from '../Preloader/Preloader';
 import './MoviesCardList.css';
 
-function MoviesCardList({ saved }) {
-  const cardLikeButtonClassName = saved ? 'card__like_saved' : 'card__like';
+function MoviesCardList({
+  saved,
+  searching,
+  moviesArray,
+  counterCard,
+  checkboxValue,
+  wasSearching,
+  hasError,
+  handleLikeClick,
+}) {
+  let emptyMessage = 'Ничего не найдено';
+
+  if (hasError) {
+    emptyMessage =
+      'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз';
+  }
+
+  function createArray() {
+    let counter = 0;
+    const result = (element) => {
+      if (counter < counterCard) {
+        if (checkboxValue) {
+          if (element.duration < 40) {
+            counter += 1;
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          counter += 1;
+          return true;
+        }
+      }
+    };
+    return result;
+  }
+  const checkArray = createArray();
+
+  const arrayForUser = moviesArray.filter((item) => checkArray(item));
 
   return (
     <section className="root__section moviesCardList">
-      <ul className="root__content cardList">
-        <li className="card">
-          <div className="card__info">
-            <div className="card__about">
-              <p className="card__title">33 слова о дизайне</p>
-              <p className="card__duration">1ч 42м</p>
-            </div>
-            <div>
-              <button
-                className={cardLikeButtonClassName}
-                type="button"
-              ></button>
-            </div>
-          </div>
-          <img className="card__img" alt="Постер" src={poster}></img>
-        </li>
-        <li className="card">
-          <div className="card__info">
-            <div className="card__about">
-              <p className="card__title">Киноальманах «100 лет дизайна»</p>
-              <p className="card__duration">1ч 42м</p>
-            </div>
-            <button className={cardLikeButtonClassName} type="button"></button>
-          </div>
-          <img className="card__img" alt="Постер" src={poster1}></img>
-        </li>
-      </ul>
+      {searching ? (
+        <Preloader />
+      ) : arrayForUser.length > 0 ? (
+        <ul className="root__content cardList">
+          {arrayForUser.map((element) => (
+            <MoviesCard
+              card={element}
+              saved={saved}
+              key={element.id}
+              handleLikeClick={handleLikeClick}
+            />
+          ))}
+        </ul>
+      ) : (
+        wasSearching && <EmptyResult message={emptyMessage} />
+      )}
     </section>
   );
 }

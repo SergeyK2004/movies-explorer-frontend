@@ -1,7 +1,7 @@
 class MoviesApi {
   constructor(options) {
-    this.baseUrl = options.baseUrl;
-    this.headers = options.headers;
+    this._baseUrl = options.baseUrl;
+    this._headers = options.headers;
   }
 
   _getResponseData(res) {
@@ -14,15 +14,15 @@ class MoviesApi {
   getMovies() {
     return fetch(this._baseUrl, {
       headers: this._headers,
-    }).then((res) => this.getResponseData(res));
+    }).then((res) => this._getResponseData(res));
   }
 }
 
-const api = new MoviesApi({
+const moviesApi = new MoviesApi({
   baseUrl: 'https://api.nomoreparties.co/beatfilm-movies',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-export default api;
+export default moviesApi;
