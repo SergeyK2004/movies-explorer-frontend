@@ -89,7 +89,6 @@ function App() {
     setIsUploadData(true);
     return Promise.all([moviesApi.getMovies(), mainApi.getMovies()])
       .then(([movies, usersMovies]) => {
-        console.log('ddd');
         setUsersMoviesArray(usersMovies.data);
         movies.forEach((element) => {
           element.like = usersMovies.data.some((item) => {
@@ -119,10 +118,8 @@ function App() {
     setCurrentUser({});
   }
 
-  function handleFormSubmit() {}
-
-  function setMeaning({ searchValue, movArr }) {
-    if (activPage === 'video') {
+  function setMeaning({ searchValue, movArr, whatsPage }) {
+    if (whatsPage === 'video') {
       setSearchString(searchValue);
       setShowMoviesArray(movArr);
       localStorage.setItem('searchStringStorage', searchValue);
@@ -135,6 +132,27 @@ function App() {
     }
   }
 
+  function renewView(whatsPage) {
+    if (
+      localStorage.getItem(
+        whatsPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
+      ) &&
+      (whatsPage === 'video' ? searchString : usersSearchString)
+    ) {
+      const arrayForShow = JSON.parse(
+        localStorage.getItem(
+          whatsPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
+        ),
+      );
+      const searchValue =
+        whatsPage === 'video' ? searchString : usersSearchString;
+      const movArr = arrayForShow.filter(function (item) {
+        return item.nameRU.indexOf(searchValue) > -1 && item.image;
+      });
+      setMeaning({ searchValue, movArr, whatsPage });
+    }
+  }
+
   function handleSearchFormSubmit(searchValue) {
     let movArr = [];
     if (
@@ -142,18 +160,17 @@ function App() {
         activPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
       )
     ) {
-      const arrayForShow = JSON.parse(
-        localStorage.getItem(
-          activPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
-        ),
-      );
-      movArr = arrayForShow.filter(function (item) {
-        return item.nameRU.indexOf(searchValue) > -1 && item.image;
-      });
-      setMeaning({ searchValue, movArr });
+      if (activPage === 'video') {
+        setSearchString(searchValue);
+      } else {
+        setUsersSearchString(searchValue);
+      }
+
+      renewView(activPage);
     } else {
       getData()
         .then(([movies, usersMovies]) => {
+          console.log(activPage);
           if (activPage === 'video') {
             movArr = movies.filter(function (item) {
               return item.nameRU.indexOf(searchValue) > -1 && item.image;
@@ -163,7 +180,8 @@ function App() {
               return item.nameRU.indexOf(searchValue) > -1 && item.image;
             });
           }
-          setMeaning({ searchValue, movArr });
+          console.log(searchValue, movArr, activPage);
+          setMeaning({ searchValue, movArr, whatsPage: activPage });
           setHasError(false);
         })
         .catch((err) => {
@@ -181,6 +199,7 @@ function App() {
       localStorage.setItem('usersCheckboxValueStorage', value);
     }
   }
+
   function handleLikeClick({ card, saved }) {
     if (!saved && !card.like) {
       // Добавляем фильм в базу пользователя
@@ -192,12 +211,42 @@ function App() {
             'usersMoviesArray',
             JSON.stringify(usersMoviesArray),
           );
-          console.log(usersMoviesArray);
           card.like = true;
           moviesArray.find(function (item) {
             return item.id === card.id;
           }).like = true;
           localStorage.setItem('moviesArray', JSON.stringify(moviesArray));
+          renewView('usersVideo');
+        })
+        .catch((err) => console.log(err));
+    } else {
+      // Удаляем фильм из базы пользователя и убираем лайк
+      const indexOfCard = usersMoviesArray.findIndex(function (el) {
+        return el.movieId === (saved ? card.movieId : card.id);
+      });
+
+      return mainApi
+        .delMovie(usersMoviesArray[indexOfCard]._id)
+        .then((res) => {
+          usersMoviesArray.splice(indexOfCard, 1);
+
+          const cardOfMoviesArray = moviesArray.find(function (el) {
+            return el.id === (saved ? card.movieId : card.id);
+          });
+          cardOfMoviesArray.like = false;
+
+          localStorage.setItem('moviesArray', JSON.stringify(moviesArray));
+          localStorage.setItem(
+            'usersMoviesArray',
+            JSON.stringify(usersMoviesArray),
+          );
+          if (saved) {
+            renewView('video');
+            renewView('usersVideo');
+          } else {
+            card.like = false;
+            renewView('usersVideo');
+          }
         })
         .catch((err) => console.log(err));
     }
@@ -239,6 +288,14 @@ function App() {
             setUsersCheckboxValue(
               localStorage.getItem('checkboxUsersValueStorage') === 'true',
             );
+          }
+          if (localStorage.getItem('usersMoviesArray')) {
+            setUsersMoviesArray(
+              JSON.parse(localStorage.getItem('usersMoviesArray')),
+            );
+          }
+          if (localStorage.getItem('moviesArray')) {
+            setMoviesArray(JSON.parse(localStorage.getItem('moviesArray')));
           }
           setActivPage('video');
           history.push('/movies');

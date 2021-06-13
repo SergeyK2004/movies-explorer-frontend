@@ -12,7 +12,6 @@ function MoviesCard({ card, saved, handleLikeClick }) {
   const cardImage = saved
     ? card.image
     : `https://api.nomoreparties.co${card.image.url}`;
-  console.log(card);
   function timing(dur) {
     let res = '';
     const minutes = dur % 60;

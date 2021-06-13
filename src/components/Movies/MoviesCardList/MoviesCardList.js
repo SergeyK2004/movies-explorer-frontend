@@ -50,11 +50,11 @@ function MoviesCardList({
         <Preloader />
       ) : arrayForUser.length > 0 ? (
         <ul className="root__content cardList">
-          {arrayForUser.map((element) => (
+          {arrayForUser.map((element, i) => (
             <MoviesCard
               card={element}
               saved={saved}
-              key={element.id}
+              key={i}
               handleLikeClick={handleLikeClick}
             />
           ))}

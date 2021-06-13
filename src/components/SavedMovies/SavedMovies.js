@@ -16,9 +16,12 @@ function SavedMovies({
   setActivPage,
   handleLikeClick,
 }) {
-  setActivPage('usersVideo');
   const counterCard = showMoviesArray.length;
   const wasSearching = Boolean(searchString);
+  React.useEffect(() => {
+    setActivPage('usersVideo');
+  }, [setActivPage]);
+
   return (
     <>
       <Header></Header>

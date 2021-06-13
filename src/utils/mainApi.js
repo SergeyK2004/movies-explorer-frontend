@@ -9,7 +9,6 @@ class MainApi {
       console.log('не прошло');
       return Promise.reject(`Ошибка: ${res.status}`);
     }
-    console.log('прошло');
     return res.json();
   }
   _createHeader() {
@@ -60,21 +59,6 @@ class MainApi {
     });
   }
   setNewMovie(item) {
-    const aaa = {
-      country: item.country,
-      director: item.director,
-      duration: item.duration,
-      year: item.year,
-      description: item.description,
-      image: 'https://api.nomoreparties.co' + item.image.url,
-      trailer: item.trailerLink,
-      nameRU: item.nameRU,
-      nameEN: item.nameEN,
-      thumbnail:
-        'https://api.nomoreparties.co' + item.image.formats.thumbnail.url,
-      movieId: item.id,
-    };
-    console.log(aaa);
     return fetch(this._baseUrl + 'movies', {
       headers: this._createHeader(),
       method: 'POST',
