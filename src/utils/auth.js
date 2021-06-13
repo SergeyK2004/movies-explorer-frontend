@@ -1,6 +1,6 @@
 export const BASE_URL = 'https://sergey.nomoredomains.icu';
 
-export const register = (name, password, email) => {
+export const register = ({ name, password, email }) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
@@ -19,7 +19,7 @@ export const register = (name, password, email) => {
     return response.json();
   });
 };
-export const autorize = (password, email) => {
+export const autorize = ({ password, email }) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
@@ -31,9 +31,7 @@ export const autorize = (password, email) => {
       email: email,
     }),
   }).then((response) => {
-    console.log(response);
     if (!response.ok) {
-      console.log(`Ошибка: ${response.status}`);
       return Promise.reject(`Ошибка: ${response.status}`);
     }
     return response.json();

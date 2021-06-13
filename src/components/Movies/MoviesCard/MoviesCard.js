@@ -12,6 +12,9 @@ function MoviesCard({ card, saved, handleLikeClick }) {
   const cardImage = saved
     ? card.image
     : `https://api.nomoreparties.co${card.image.url}`;
+
+  const cardTrailer = saved ? card.trailer : card.trailerLink;
+
   function timing(dur) {
     let res = '';
     const minutes = dur % 60;
@@ -21,6 +24,9 @@ function MoviesCard({ card, saved, handleLikeClick }) {
     return res;
   }
 
+  function onImageClick() {
+    window.open(cardTrailer, '_blank');
+  }
   function onLikeClick() {
     handleLikeClick({ card, saved }).finally(() =>
       setCardLikeButtonClassName(whatsClasslike()),
@@ -41,7 +47,12 @@ function MoviesCard({ card, saved, handleLikeClick }) {
           ></button>
         </div>
       </div>
-      <img className="card__img" alt="Постер" src={cardImage}></img>
+      <img
+        className="card__img"
+        alt="Постер"
+        src={cardImage}
+        onClick={onImageClick}
+      ></img>
     </li>
   );
 }

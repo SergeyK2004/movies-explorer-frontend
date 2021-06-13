@@ -8,7 +8,6 @@ const useInput = (initial, type) => {
     value,
     onChange: (e) => {
       setValue(e.target.value);
-      console.log(type, e);
       const isError = !e.target.checkValidity();
       if (isError) {
         if (type === 'name') {

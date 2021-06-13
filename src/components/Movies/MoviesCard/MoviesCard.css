@@ -4,6 +4,7 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top: 40px;
+
 }
 
 .card__info {
@@ -19,6 +20,7 @@
   width: 220px;
   height: 122px;
   margin: 6px;
+  cursor: pointer;
 }
 
 .card__title {

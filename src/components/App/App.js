@@ -12,6 +12,8 @@ import CurrentUserContext from '../../utils/CurrentUserContext';
 import { chekToken, autorize, register } from '../../utils/auth';
 import mainApi from '../../utils/mainApi';
 import moviesApi from '../../utils/moviesApi';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import ModalPopup from '../Modal/ModalPopup';
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -29,6 +31,8 @@ function App() {
   const [usersSearchString, setUsersSearchString] = useState('');
   const [usersCheckboxValue, setUsersCheckboxValue] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [modalText, setModalText] = React.useState('');
 
   function onRegister({ password, email, name }) {
     register(name, password, email)
@@ -44,7 +48,8 @@ function App() {
         history.push('/movies');
       })
       .catch((err) => {
-        console.log(err);
+        setModalText(err);
+        setModalIsOpen(true);
       });
   }
 
@@ -53,9 +58,12 @@ function App() {
       .setUserInfo(item)
       .then((newUserInfo) => {
         setCurrentUser(newUserInfo.data);
+        setModalText('Данные пользователя успешно обновлены');
+        setModalIsOpen(true);
       })
       .catch((err) => {
-        console.log(err);
+        setModalText(err);
+        setModalIsOpen(true);
       });
   }
 
@@ -75,7 +83,8 @@ function App() {
           });
       })
       .catch((err) => {
-        console.log(err);
+        setModalText(err);
+        setModalIsOpen(true);
       });
   }
 
@@ -152,7 +161,8 @@ function App() {
       });
       setMeaning({ searchValue, movArr, whatsPage });
     } else {
-      console.log('Что-то не так при обновлении отображения фильмов');
+      setModalText('Что-то не так при обновлении отображения фильмов');
+      setModalIsOpen(true);
     }
   }
 
@@ -189,8 +199,9 @@ function App() {
           setHasError(false);
         })
         .catch((err) => {
-          console.log(err);
           setHasError(true);
+          setModalText(err);
+          setModalIsOpen(true);
         });
     }
   }
@@ -223,7 +234,10 @@ function App() {
           renewView('usersVideo');
           renewView('video');
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setModalText(err);
+          setModalIsOpen(true);
+        });
     } else {
       // Удаляем фильм из базы пользователя и убираем лайк
       const indexOfCard = usersMoviesArray.findIndex(function (el) {
@@ -253,10 +267,12 @@ function App() {
             renewView('usersVideo');
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setModalText(err);
+          setModalIsOpen(true);
+        });
     }
   }
-
   React.useEffect(() => {
     if (localStorage.getItem('token')) {
       const token = localStorage.getItem('token');
@@ -302,68 +318,69 @@ function App() {
           if (localStorage.getItem('moviesArray')) {
             setMoviesArray(JSON.parse(localStorage.getItem('moviesArray')));
           }
-          setActivPage('video');
           history.push('/movies');
         })
         .catch((err) => {
           localStorage.clear();
-          console.log(err);
+          setModalText(err);
+          setModalIsOpen(true);
         });
     }
-  }, [history]);
+  }, []);
+  function handleModalClose() {
+    setModalIsOpen(false);
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="App">
-        <div className="page">
-          <Switch>
-            <Route path="/" exact>
-              <Main loggedIn={loggedIn} onLogin={onLogin} />
-            </Route>
-            <Route path="/signup">
-              <Register onRegister={onRegister} isClearInput={isClearInput} />
-            </Route>
-            <Route path="/signin">
-              <Login onLogin={onLogin} isClearInput={isClearInput} />
-            </Route>
-            <Route path="/movies">
-              <Movies
-                handleSearchFormSubmit={handleSearchFormSubmit}
-                changeCheckbox={changeCheckbox}
-                searchString={searchString}
-                checkboxValue={checkboxValue}
-                isUploadData={isUploadData}
-                showMoviesArray={showMoviesArray}
-                hasError={hasError}
-                setActivPage={setActivPage}
-                handleLikeClick={handleLikeClick}
-              />
-            </Route>
-            <Route path="/saved-movies">
-              <SavedMovies
-                handleSearchFormSubmit={handleSearchFormSubmit}
-                changeCheckbox={changeCheckbox}
-                searchString={usersSearchString}
-                checkboxValue={usersCheckboxValue}
-                isUploadData={isUploadData}
-                showMoviesArray={usersShowMoviesArray}
-                hasError={hasError}
-                setActivPage={setActivPage}
-                handleLikeClick={handleLikeClick}
-              ></SavedMovies>
-            </Route>
-            <Route path="/profile">
-              <Profile
-                onLogout={onLogout}
-                onSubmit={handleUpdateUser}
-              ></Profile>
-            </Route>
-            <Route path="/">
-              <Error404 />
-            </Route>
-          </Switch>
-        </div>
-      </div>
+      <Switch>
+        <Route path="/" exact>
+          <Main loggedIn={loggedIn} onLogin={onLogin} />
+        </Route>
+        <Route path="/signup">
+          <Register onRegister={onRegister} isClearInput={isClearInput} />
+        </Route>
+        <Route path="/signin">
+          <Login onLogin={onLogin} isClearInput={isClearInput} />
+        </Route>
+        <ProtectedRoute path="/movies" loggedIn={loggedIn}>
+          <Movies
+            handleSearchFormSubmit={handleSearchFormSubmit}
+            changeCheckbox={changeCheckbox}
+            searchString={searchString}
+            checkboxValue={checkboxValue}
+            isUploadData={isUploadData}
+            showMoviesArray={showMoviesArray}
+            hasError={hasError}
+            setActivPage={setActivPage}
+            handleLikeClick={handleLikeClick}
+          />
+        </ProtectedRoute>
+        <ProtectedRoute path="/saved-movies" loggedIn={loggedIn}>
+          <SavedMovies
+            handleSearchFormSubmit={handleSearchFormSubmit}
+            changeCheckbox={changeCheckbox}
+            searchString={usersSearchString}
+            checkboxValue={usersCheckboxValue}
+            isUploadData={isUploadData}
+            showMoviesArray={usersShowMoviesArray}
+            hasError={hasError}
+            setActivPage={setActivPage}
+            handleLikeClick={handleLikeClick}
+          ></SavedMovies>
+        </ProtectedRoute>
+        <ProtectedRoute path="/profile" loggedIn={loggedIn}>
+          <Profile onLogout={onLogout} onSubmit={handleUpdateUser} />
+        </ProtectedRoute>
+        <Route path="/">
+          <Error404 />
+        </Route>
+      </Switch>
+      <ModalPopup
+        isOpen={modalIsOpen}
+        handleClose={handleModalClose}
+        title={modalText}
+      />
     </CurrentUserContext.Provider>
   );
 }
