@@ -137,19 +137,28 @@ function App() {
       localStorage.getItem(
         whatsPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
       ) &&
-      (whatsPage === 'video' ? searchString : usersSearchString)
+      localStorage.getItem(
+        whatsPage === 'video'
+          ? 'searchStringStorage'
+          : 'searchUsersStringStorage',
+      )
     ) {
       const arrayForShow = JSON.parse(
         localStorage.getItem(
           whatsPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
         ),
       );
-      const searchValue =
-        whatsPage === 'video' ? searchString : usersSearchString;
+      const searchValue = localStorage.getItem(
+        whatsPage === 'video'
+          ? 'searchStringStorage'
+          : 'searchUsersStringStorage',
+      );
       const movArr = arrayForShow.filter(function (item) {
         return item.nameRU.indexOf(searchValue) > -1 && item.image;
       });
       setMeaning({ searchValue, movArr, whatsPage });
+    } else {
+      console.log('Что-то не так при обновлении отображения фильмов');
     }
   }
 
@@ -160,11 +169,12 @@ function App() {
         activPage === 'video' ? 'moviesArray' : 'usersMoviesArray',
       )
     ) {
-      if (activPage === 'video') {
-        setSearchString(searchValue);
-      } else {
-        setUsersSearchString(searchValue);
-      }
+      localStorage.setItem(
+        activPage === 'video'
+          ? 'searchStringStorage'
+          : 'searchUsersStringStorage',
+        searchValue,
+      );
 
       renewView(activPage);
     } else {
@@ -217,6 +227,7 @@ function App() {
           }).like = true;
           localStorage.setItem('moviesArray', JSON.stringify(moviesArray));
           renewView('usersVideo');
+          renewView('video');
         })
         .catch((err) => console.log(err));
     } else {
