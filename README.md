@@ -9,6 +9,5 @@
 Макет проекта можно посмотреть [здесь](https://disk.yandex.ru/d/VqOY_NPfcksiIw).
 
 Фронт-енд размещен по адресу [sergeys-movies.nomoredomains.icu](https://sergeys-movies.nomoredomains.icu).
-Для перехода к страницам с фильмами используйте путь [/movies](https://sergeys-movies.nomoredomains.icu/movies) 
 
 Бэк-енд размещен на сайте [sergey.nomoredomains.icu/movies](https://sergey.nomoredomains.icu/movies).
