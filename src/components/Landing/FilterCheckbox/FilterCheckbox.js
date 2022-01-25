@@ -10,11 +10,11 @@ function FilterCheckbox({ placeholder, handleChange, value }) {
         id="check"
         placeholder={placeholder}
         onChange={handleChange}
-        value={value}
+        checked={value}
         required
       ></input>
 
-      <label className="checkbox__btn" for="check"></label>
+      <label className="checkbox__btn" htmlFor="check"></label>
       <p className="checkbox__name">{placeholder}</p>
     </div>
   );

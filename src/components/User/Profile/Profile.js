@@ -1,41 +1,74 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Header from '../../Landing/Header/Header';
+import CurrentUserContext from '../../../utils/CurrentUserContext';
+import useInput from '../../../utils/useInput';
 import './Profile.css';
 
 function Profile(props) {
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const currentUser = React.useContext(CurrentUserContext);
+  const name = useInput(currentUser.name, 'name');
+  const email = useInput(currentUser.email, 'email');
+
+  const [buttonClass, setButtonClass] = React.useState('');
+  const [submitDisabled, setSubmitDisabled] = React.useState(true);
+
   function handleSubmit(e) {
     e.preventDefault();
-    props.onSubmit(name, password, email);
-  }
-  function handlerOnChangeName(evt) {
-    setName(evt.target.value);
-  }
-  function handlerOnChangeEmail(evt) {
-    setEmail(evt.target.value);
-  }
-  React.useEffect(() => {
-    if (props.isClearInput) {
-      setName('');
-      setEmail('');
-      setPassword('');
+    if (!submitDisabled) {
+      props.onSubmit({ name: name.value, email: email.value });
     }
-  }, [props.isClearInput]);
+  }
+
+  React.useEffect(() => {
+    let newName = '';
+    let newEmail = '';
+
+    if (typeof name.target !== 'undefined') {
+      newName = name.target.value;
+    } else {
+      newName = name.value;
+    }
+    if (typeof email.target !== 'undefined') {
+      newEmail = email.target.value;
+    } else {
+      newEmail = email.value;
+    }
+    if (
+      name.error ||
+      email.error ||
+      (newName === currentUser.name && newEmail === currentUser.email)
+    ) {
+      setButtonClass('profile__change profile__change_disabled');
+      setSubmitDisabled(true);
+    } else {
+      setButtonClass('profile__change');
+      setSubmitDisabled(false);
+    }
+  }, [
+    name.error,
+    email.error,
+    currentUser.email,
+    currentUser.name,
+    email.target,
+    name.target,
+    email.value,
+    name.value,
+  ]);
 
   return (
     <>
       <Header />
       <section className="profile">
         <div className="profile__top">
-          <h2 className="profile__title">{`Привет, ${name}`}</h2>
+          <h2 className="profile__title">{`Привет, ${currentUser.name}`}</h2>
         </div>
         <form name="login" className="profile__form" noValidate>
           <label className="profile__field">
             <p className="profile__field-name">Имя</p>
             <input
+              {...name}
+              pattern="[a-zа-яёA-ZА-ЯЁ][a-zа-яёA-ZА-ЯЁ -]+"
               required
               placeholder="Name"
               className="profile__input profile__input_type_name"
@@ -45,41 +78,52 @@ function Profile(props) {
               autoComplete="username"
               minLength="2"
               maxLength="40"
-              value={name || ''}
-              onChange={handlerOnChangeName}
             />
             <span
-              className="authForm__input-error"
+              className={
+                name.error
+                  ? 'authForm__input-error'
+                  : 'authForm__input-error authForm__input-noerror'
+              }
               id="name-input-error"
-            ></span>
+            >
+              {name.error}
+            </span>
           </label>
 
           <label className="profile__field">
             <p className="profile__field-name">E-mail</p>
             <input
+              {...email}
               required
               placeholder="Email"
               className="profile__input profile__input_type_email"
-              type="text"
+              type="email"
               name="email"
               id="email-input"
-              autoComplete="username"
+              autoComplete="useremail"
               minLength="2"
               maxLength="40"
-              value={email || ''}
-              onChange={handlerOnChangeEmail}
             />
             <span
-              className="authForm__input-error"
+              className={
+                email.error
+                  ? 'authForm__input-error'
+                  : 'authForm__input-error authForm__input-noerror'
+              }
               id="name-input-error"
-            ></span>
+            >
+              {email.error}
+            </span>
           </label>
         </form>
         <div className="profile__bottom">
-          <p onClick={handleSubmit} className="profile__change">
+          <p onClick={handleSubmit} className={buttonClass}>
             Редактировать
           </p>
-          <p className="profile__logout">Выйти из аккаунта</p>
+          <p onClick={props.onLogout} className="profile__logout">
+            Выйти из аккаунта
+          </p>
         </div>
       </section>
     </>

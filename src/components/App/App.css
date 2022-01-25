@@ -10,3 +10,44 @@
   min-height: 100vh;
   justify-content: space-between;
 }
+
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.popup__close {
+  padding: 0;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-image: url('../../images/popup_close.svg');
+  width: 40px;
+  height: 40px;
+  background-size: 40px 40px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: $blue;
+  cursor: pointer;
+}
+
+.popup__title {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 58px;
+  /* or 116% */
+
+  text-align: center;
+  vertical-align: middle;
+}

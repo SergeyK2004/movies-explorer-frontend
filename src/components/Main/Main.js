@@ -7,10 +7,10 @@ import Footer from '../Landing/Footer/Footer';
 
 import './Main.css';
 
-function Main() {
+function Main({ loggedIn, onLogin }) {
   return (
     <div class="main">
-      <Promo />
+      <Promo loggedIn={loggedIn} onLogin={onLogin} />
       <AboutProject />
       <Techs />
       <Portfolio />

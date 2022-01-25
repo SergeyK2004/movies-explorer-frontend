@@ -5,14 +5,16 @@ import photo from '../../../images/sergeys_photo.jpg';
 
 function Portfolio() {
   return (
-    <section class="portfolio  root__section" id="portfolio">
-      <div class="portfolio__content root__content">
-        <h2 class="portfolio__title">Студент</h2>
-        <div class="portfolio__about">
-          <div class="portfolio__description">
-            <h3 class="portfolio__label">Сергей</h3>
-            <p class="portfolio__profession">Фронтенд-разработчик, 46 лет</p>
-            <p class="portfolio__text">
+    <section className="portfolio  root__section" id="portfolio">
+      <div className="portfolio__content root__content">
+        <h2 className="portfolio__title">Студент</h2>
+        <div className="portfolio__about">
+          <div className="portfolio__description">
+            <h3 className="portfolio__label">Сергей</h3>
+            <p className="portfolio__profession">
+              Фронтенд-разработчик, 46 лет
+            </p>
+            <p className="portfolio__text">
               Я родился и живу в Южно-Сахалинске, закончил факультет экономики
               ДВГУПС. С самой школы мечтал стать программистом и мечта сбылась.
               Последние 20 лет работал в собственной компании, занимаясь
@@ -21,9 +23,9 @@ function Portfolio() {
               реализовать себя в сфере интернет-технологий. В 2021 году окончил
               курс в Яндекс.Практикуме по специальности Веб-разработчик.
             </p>
-            <div class="portfolio__social">
+            <div className="portfolio__social">
               <a
-                class="portfolio__about-link"
+                className="portfolio__about-link"
                 target="_blank"
                 rel="noreferrer"
                 href="https://github.com/SergeyK2004"
@@ -32,12 +34,12 @@ function Portfolio() {
               </a>
             </div>
           </div>
-          <img class="portfolio__photo" src={photo} alt="Фото"></img>
+          <img className="portfolio__photo" src={photo} alt="Фото"></img>
         </div>
-        <p class="portfolio__chapter">Портфолио</p>
-        <div class="portfolio__links">
+        <p className="portfolio__chapter">Портфолио</p>
+        <div className="portfolio__links">
           <a
-            class="portfolio__link"
+            className="portfolio__link"
             href="https://github.com/SergeyK2004/how-to-learn"
             target="_blank"
             rel="noreferrer"
@@ -46,9 +48,9 @@ function Portfolio() {
           </a>
           <img src={arrow} alt="Стрелка"></img>
         </div>
-        <div class="portfolio__links">
+        <div className="portfolio__links">
           <a
-            class="portfolio__link"
+            className="portfolio__link"
             href="https://github.com/SergeyK2004/russian-travel"
             target="_blank"
             rel="noreferrer"
@@ -57,9 +59,9 @@ function Portfolio() {
           </a>
           <img src={arrow} alt="Стрелка"></img>
         </div>
-        <div class="portfolio__links">
+        <div className="portfolio__links">
           <a
-            class="portfolio__link"
+            className="portfolio__link"
             href="https://github.com/SergeyK2004/react-mesto-auth"
             target="_blank"
             rel="noreferrer"
